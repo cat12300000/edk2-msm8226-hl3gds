@@ -12,6 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout EDK2
+        run: git clone --depth 1 -b edk2-stable202302 --recursive https://github.com/tianocore/edk2.git ../edk2
+
+      - name: Checkout EDK2-Platforms
+        run: git clone --depth 1 https://github.com/tianocore/edk2-platforms.git ../edk2-platforms
+
       - name: Install dependencies
         run: |
           sudo apt-get update
