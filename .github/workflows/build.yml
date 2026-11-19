@@ -1,0 +1,36 @@
+name: Build EDK2 for Note 3 Neo (hl3gds)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential uuid-dev iasl git nasm \
+            crossbuild-essential-armel crossbuild-essential-armhf bc python3
+
+      - name: Setup (firstrun)
+        run: |
+          chmod +x ./scripts/firstrun.sh
+          ./scripts/firstrun.sh
+
+      - name: Build hl3gds
+        run: |
+          chmod +x ./scripts/hl3gds.sh
+          ./scripts/hl3gds.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-hl3gds
+          path: workspace/boot.img
